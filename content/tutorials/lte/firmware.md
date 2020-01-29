@@ -37,7 +37,7 @@ Please start with the following steps:
 2. Select Firmware Type `stable` in the communication window to upgrade to version `v1.18.1.r1`
 
 
-The modem firmware files are password protected, to download them you should be a forum.pycom.io member and access to: 
+The modem firmware files are password protected, to download them you should be a forum.pycom.io member and access to:
 Announcements & News --&gt;  Announcements only for members --&gt; Firmware Files for Sequans LTE modem now are secured, or clicking [Here](https://forum.pycom.io/topic/4020/firmware-files-for-sequans-lte-modem-now-are-secured).
 
 You can find the different versions of firmwares available [here](https://software.pycom.io/downloads/sequans2.html).
@@ -57,7 +57,7 @@ import sqnsupgrade
 sqnsupgrade.run('upgdiff_38638-to-39529.dup')
 ```
 If you are updating the Sequans firmware on your module for the first time, please use instead the file upgdiff_33080-to-39529.dup (1.2M) from the same archive.
-Similar upgrade packages are available for the NB-IoT firmwares. 
+Similar upgrade packages are available for the NB-IoT firmwares.
 {{% /hint %}}
 
 ## Via SD card
@@ -267,5 +267,3 @@ The latest version of the `sqnsupgrade` class has a few additional features that
 
 #### sqnsupgrade.run(load_fff=True)
     New optional command line option load_fff for the sqnsupgrade.run() command. This is designed to be an internal flag. And should only applied when advised by pycom support.
-    
-
