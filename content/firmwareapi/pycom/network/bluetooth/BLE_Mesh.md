@@ -65,29 +65,27 @@ This API creates a new BLE_Mesh_Element object. The BLE_Mesh_Element on concept 
 
 ## Methods of BLE_Mesh_Element object
 
-#### BLE_Mesh_Element.add_model(type=BLE_Mesh.GEN_ONOFF, server_client=BLE_Mesh.SERVER, *, callback=None, value=None, sen_min=-100, sen_max=100, sen_res=0.1)
+#### BLE_Mesh_Element.add_model(type=BLE_Mesh.GEN_ONOFF, server_client=BLE_Mesh.SERVER, *, callback=None, value=None)
 
 This API creates a new BLE_Mesh_Model object. The BLE_Mesh_Model on concept level is equivalent to the Model in the BLE Mesh terminology.
 
 * `type` is the type of the new Model.
 * `server_client` shows whether the new Model will act as a Server or Client.
-* `callback` is the user defined callback to call when any event happens on the Model. It accepts 3 parameters: `new_state`, `event`, `op_code`. The `new_state` is the corresponding state of BLE_Mesh_Model, the `event` and the `op_code` are belonging of the BLE Mesh packet received.
+* `callback` is the user defined callback to call when any event happens on the Model. It accepts 4 parameters: `new_state`, `addr`, `type` and `prop_id`. The `new_state` is the corresponding state of BLE_Mesh_Model, the `addr` and the `type` are belonging of the BLE Mesh packet received, and the `prop_id` is only interpreted on Sensor Models.
 * `value` is the initial value represented by the Model.
-* `sen_min` is the minimum value of Sensor State in case of Sensor Model.
-* `sen_max` is the maximum value of Sensor State in case of Sensor Model.
-* `sen_res` is the resolution of Sensor State in case of Sensor Model.
 
 ## Methods of BLE_Mesh_Model object
 
-#### BLE_Mesh_Model.get_state(addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None)
+#### BLE_Mesh_Model.get_state(addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None, prop_id=-1)
 
 Gets the State of the Sensor Model. If called from Server Model, returnes with State, in case of Client Model, it sends a Get Message, and returns State through the registered callback.
 
 * `addr` is the address of the remote Node to send the update message.
 * `app_idx` is the index of one of the registered Application IDs to use when sending out the message.
 * `state_type` is the type of Get State.
+* `prop_id` is a unique identifier (so called Property ID) of the represented Sensor State. Setting -1 value means the first Sensor State in the list of States.
 
-#### BLE_Mesh_Model.set_state(state, addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None)
+#### BLE_Mesh_Model.set_state(state, addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None, prop_id=-1)
 
 Sets the State of the Sensor Model. If called from Server Model, sets State directly, in case of Client Model, it sends a Set Message, and updates State.
 
@@ -95,14 +93,22 @@ Sets the State of the Sensor Model. If called from Server Model, sets State dire
 * `addr` is the address of the remote Node to send the update message.
 * `app_idx` is the index of one of the registered Application IDs to use when sending out the message.
 * `state_type` is the type of Set State.
+* `prop_id` is a unique identifier (so called Property ID) of the represented Sensor State. Setting -1 value means the first Sensor State in the list of States.
 
-#### BLE_Mesh_Model.status_state(addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None)
+#### BLE_Mesh_Model.status_state(addr=BLE_Mesh.ADDR_ALL_NODES, app_idx=0, state_type=None, prop_id=-1)
 
 Calling this function only makes sense when the BLE_Mesh_Model is a Server Model. It sends a Status message with the State to the Client Model(s).
 
 * `addr` is the address of the remote Node to send the update message.
 * `app_idx` is the index of one of the registered Application IDs to use when sending out the message.
 * `state_type` is the type of Status State.
+* `prop_id` is a unique identifier (so called Property ID) of the represented Sensor State. Setting -1 value means the first Sensor State in the list of States.
+
+#### BLE_Mesh_Model.add_sensor(prop_id=0)
+
+This API creates a new BLE_Mesh_Sensor_State object. Calling this function only makes sense when the BLE_Mesh_Model is a Sensor Server Model. It adds a Sensor State to the Model.
+
+* `prop_id` is a unique identifier (so called Property ID) of the represented Sensor State.
 
 ## Constants
 

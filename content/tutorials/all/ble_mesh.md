@@ -37,7 +37,7 @@ def blink_led(n):
         pycom.rgbled(0x000000) # off
         time.sleep(0.3)
 
-def server_cb(new_state, event, recv_op):
+def server_cb(new_state, addr, typ, prop_id):
     print("SERVER | State: ", new_state)
 
     # Turn on LED on board based on State
@@ -104,7 +104,7 @@ def blink_led(n):
         pycom.rgbled(0x000000) # off
         time.sleep(0.3)
 
-def client_cb(new_state, event, recv_op):
+def client_cb(new_state, addr, typ, prop_id):
     print("CLIENT | State: ", new_state)
 
 def prov_callback(event, oob_pass):
@@ -198,7 +198,8 @@ bluetooth = Bluetooth()
 
 # Create a Primary Element with GATT Proxy feature and add a Server model to the Element
 element = BLE_Mesh.create_element(primary=True, feature=BLE_Mesh.GATT_PROXY)
-model_server = element.add_model(BLE_Mesh.SENSOR, BLE_Mesh.SERVER, sen_min = 0, sen_max = 59, sen_res = 1)
+model_server = element.add_model(BLE_Mesh.SENSOR, BLE_Mesh.SERVER)
+model_server.add_sensor(prop_id=1)
 
 # Initialize BLE_Mesh
 BLE_Mesh.init("Pycom Sensor Server", callback=prov_callback)
@@ -211,6 +212,14 @@ Timer.Alarm(read_sensor, 1, periodic=True)
 
 # Sensor send status every 5 seconds
 Timer.Alarm(status_sensor, 5, periodic=True)
+
+"""
+# If multiple Sensor States are defined
+# Current state can be get/set/status with Property ID using
+model_client.get_state(prop_id = 2)
+model_client.set_state(prop_id = 2)
+model_client.status_state(prop_id = 2)
+"""
 ```
 
 ### Sensor Client
@@ -221,7 +230,7 @@ Sensor Client is looking for measurements, as Server sends Status every 5 second
 from network import Bluetooth
 import pycom
 
-def client_cb(new_state, event, recv_op):
+def client_cb(new_state, addr, typ, prop_id):
     print("CLIENT | State: ", new_state)
 
 def prov_callback(event, oob_pass):
@@ -243,11 +252,17 @@ bluetooth = Bluetooth()
 
 # Create a Primary Element with GATT Proxy feature and add a Server model to the Element
 element = BLE_Mesh.create_element(primary=True, feature=BLE_Mesh.GATT_PROXY)
-model_client = element.add_model(BLE_Mesh.SENSOR, BLE_Mesh.CLIENT, callback=client_cb, sen_min = 0, sen_max = 59, sen_res = 1)
+model_client = element.add_model(BLE_Mesh.SENSOR, BLE_Mesh.CLIENT, callback=client_cb)
 
 # Initialize BLE_Mesh
 BLE_Mesh.init("Pycom Sensor Client", callback=prov_callback)
 
 # Turn on Provisioning Advertisement
 BLE_Mesh.set_node_prov(BLE_Mesh.PROV_ADV|BLE_Mesh.PROV_GATT)
+
+"""
+# If multiple Sensor States are defined
+# Current state can be read with Property ID using
+model_client.get_state(prop_id = 2)
+"""
 ```
